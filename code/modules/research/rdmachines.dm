@@ -15,7 +15,8 @@
 	var/shocked = FALSE
 	var/obj/machinery/computer/rdconsole/linked_console
 	var/obj/item/loaded_item = null //the item loaded inside the machine (currently only used by experimentor and destructive analyzer)
-
+	var/allowed_department_flags = ALL
+	
 /obj/machinery/rnd/proc/reset_busy()
 	busy = FALSE
 
@@ -59,7 +60,7 @@
 		return
 	if(default_deconstruction_crowbar(O))
 		return
-	if(is_open_container() && O.is_open_container())
+	if(is_refillable() && O.is_drainable())
 		return FALSE //inserting reagents into the machine
 	if(Insert_Item(O, user))
 		return TRUE

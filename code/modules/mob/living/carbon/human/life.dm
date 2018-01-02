@@ -72,6 +72,10 @@
 	else if(eye_blurry)			//blurry eyes heal slowly
 		adjust_blurriness(-1)
 
+	if(has_disability(DISABILITY_PACIFISM) && a_intent == INTENT_HARM)
+		to_chat(src, "<span class='notice'>You don't feel like harming anybody.</span>")
+		a_intent_change(INTENT_HELP)
+
 /mob/living/carbon/human/handle_mutations_and_radiation()
 	if(!dna || !dna.species.handle_mutations_and_radiation(src))
 		..()
@@ -93,18 +97,19 @@
 
 		failed_last_breath = 1
 
-		var/datum/species/S = dna.species
+		if(dna && dna.species)
+			var/datum/species/S = dna.species
 
-		if(S.breathid == "o2")
-			throw_alert("not_enough_oxy", /obj/screen/alert/not_enough_oxy)
-		else if(S.breathid == "tox")
-			throw_alert("not_enough_tox", /obj/screen/alert/not_enough_tox)
-		else if(S.breathid == "co2")
-			throw_alert("not_enough_co2", /obj/screen/alert/not_enough_co2)
-		else if(S.breathid == "n2")
-			throw_alert("not_enough_nitro", /obj/screen/alert/not_enough_nitro)
+			if(S.breathid == "o2")
+				throw_alert("not_enough_oxy", /obj/screen/alert/not_enough_oxy)
+			else if(S.breathid == "tox")
+				throw_alert("not_enough_tox", /obj/screen/alert/not_enough_tox)
+			else if(S.breathid == "co2")
+				throw_alert("not_enough_co2", /obj/screen/alert/not_enough_co2)
+			else if(S.breathid == "n2")
+				throw_alert("not_enough_nitro", /obj/screen/alert/not_enough_nitro)
 
-		return FALSE
+		return 0
 	else
 		if(istype(L, /obj/item/organ/lungs))
 			var/obj/item/organ/lungs/lun = L
@@ -237,10 +242,10 @@
 /mob/living/carbon/human/proc/get_cold_protection(temperature)
 
 	if(dna.check_mutation(COLDRES))
-		return TRUE //Fully protected from the cold.
+		return 1 //Fully protected from the cold.
 
-	if(RESISTCOLD in dna.species.species_traits)
-		return TRUE
+	if(dna && (RESISTCOLD in dna.species.species_traits))
+		return 1
 
 	if(istype(loc, /obj/item/device/dogborg/sleeper))
 		return 1 //freezing to death in sleepers ruins fun.

@@ -406,14 +406,13 @@
 	SetSleeping(0, FALSE)
 	radiation = 0
 	nutrition = NUTRITION_LEVEL_FED + 50
-	bodytemperature = 310
+	bodytemperature = BODYTEMP_NORMAL
 	set_blindness(0)
 	set_blurriness(0)
 	set_eye_damage(0)
 	cure_nearsighted()
 	cure_blind()
 	cure_husk()
-	disabilities = 0
 	hallucination = 0
 	heal_overall_damage(100000, 100000, 0, 0, 1) //heal brute and burn dmg on both organic and robotic limbs, and update health right away.
 	ExtinguishMob()
@@ -745,15 +744,6 @@
 		var/obj_temp = oloc.return_temperature()
 		if(obj_temp != null)
 			loc_temp = obj_temp
-/*	if(ismob(loc))
-		var/mob/living/mloc = loc
-		var/mob_temp = mloc.return_temperature()
-		if(mloc == DEAD)
-			loc_temp = get_turf(loc) //wew
-		else
-			loc_temp = mob_temp
-*/
-//just gunna ommit this for now, it's on the 'to figgur out' list.
 	else if(isspaceturf(get_turf(src)))
 		var/turf/heat_turf = get_turf(src)
 		loc_temp = heat_turf.temperature
@@ -806,7 +796,7 @@
 	visible_message("<span class='notice'>[user] butchers [src].</span>")
 	gib(0, 0, 1)
 
-/mob/living/canUseTopic(atom/movable/M, be_close = 0, no_dextery = 0)
+/mob/living/canUseTopic(atom/movable/M, be_close=FALSE, no_dextery=FALSE)
 	if(incapacitated())
 		return
 	if(no_dextery)
@@ -989,7 +979,6 @@
 			stop_pulling()
 	else if(has_legs || ignore_legs)
 		lying = 0
-
 	if(buckled)
 		lying = 90*buckle_lying
 	else if(!lying)
@@ -1048,7 +1037,7 @@
 	. = ..()
 	if(.)
 		if(client)
-			reset_perspective(destination)
+			reset_perspective()
 		update_canmove() //if the mob was asleep inside a container and then got forceMoved out we need to make them fall.
 
 /mob/living/proc/update_z(new_z) // 1+ to register, null to unregister

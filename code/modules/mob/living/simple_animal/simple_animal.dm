@@ -88,7 +88,7 @@
 
 	//domestication
 	var/tame = 0
-	no_vore = TRUE
+
 	var/my_z // I don't want to confuse this with client registered_z 
 
 /mob/living/simple_animal/Initialize()
@@ -370,7 +370,7 @@
 		if(target)
 			return new childspawn(target)
 
-/mob/living/simple_animal/canUseTopic(atom/movable/M, be_close = 0, no_dextery = 0)
+/mob/living/simple_animal/canUseTopic(atom/movable/M, be_close=FALSE, no_dextery=FALSE)
 	if(incapacitated())
 		return 0
 	if(no_dextery || dextrous)
